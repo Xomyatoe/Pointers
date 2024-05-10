@@ -1,6 +1,8 @@
 #include <iostream>
 using namespace std;
 #define tab "\t"
+void FillRand(int arr[], const int n);
+void Print(int arr[], const int n);
 
 void main()
 {
@@ -8,6 +10,34 @@ void main()
 	int n;
 	cout << "Введите размер массива: "; cin >> n;
 	int* arr = new int[n];
+	
+	FillRand(arr, n);
+	Print(arr, n);
+
+	int value;
+	cout << "Введите добавляемое значение: "; cin >> value;
+	//1)Создаем буферный массив нужного размера
+	int* buffer = new int[n + 1];
+	//2)Копируем значемя из исходного массива в буферный
+	for (int i = 0; i < n; i++)
+	{
+		buffer[i] = arr[i];
+	}
+	//3) Удаляем исходный массив
+	delete[] arr;
+	//4) Подменяем адрес исходного массива адресом нового массива
+	arr = buffer;
+	//5 Только после этого в конце массива появляется свободное место
+	//куда можно добавить значение
+	arr[n] = value;
+	n++;
+	Print(arr, n);
+	
+	delete[] arr;
+
+}
+void FillRand(int arr[], const int n)
+{
 	for (int i = 0; i < n; i++)
 	{
 		//обращение к элементам через арифметику указателей
@@ -15,7 +45,9 @@ void main()
 		*(arr + i) = rand() % 100;
 
 	}
-
+}
+void Print(int arr[], const int n)
+{
 	for (int i = 0; i < n; i++)
 	{
 		//обращение к элементам через оператор индексирования -[];
@@ -23,5 +55,4 @@ void main()
 
 	}
 	cout << endl;
-	delete[] arr;
 }
