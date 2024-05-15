@@ -18,6 +18,8 @@ int* push_front(int arr[], int& n, int value);
 int* pop_back(int arr[], int& n);
 
 int** push_row_back(int** arr,  int& rows, const int cols);
+int** pop_row_back(int** arr, int& rows, const int cols);
+void push_col_back(int** arr,const int rows, int& cols);
 
 //#define DYNAMIC_MEMORY_1
 #define DYNAMIC_MEMORY_2
@@ -64,8 +66,11 @@ void main()
 	FillRand(arr[rows - 1], cols, 100,1000);
 	Print(arr, rows, cols);
 
+	arr=pop_row_back(arr, rows, cols);
+	Print(arr, rows, cols);
+	push_col_back(arr,rows,cols);
+	Print(arr, rows, cols);
 	Clear(arr, rows);
-
 #endif
 
 }
@@ -177,7 +182,7 @@ int* pop_back(int arr[], int& n)
 
 int** push_row_back(int** arr,  int& rows, const int cols)
 {
-	//создаем буферный массив указателей нужного размера
+	//1) создаем буферный массив указателей нужного размера
 	int** buffer = new int* [rows+1];
 
 	//Копируем строки из исходного массивав массив указателей
@@ -189,4 +194,28 @@ int** push_row_back(int** arr,  int& rows, const int cols)
 	//После добавления строки в массив колличество его строк увеличивается
 	rows++;
 	return buffer;
+}
+int** pop_row_back(int** arr, int& rows, const int cols)
+{
+
+	int** buffer = new int* [--rows];
+	for (int i = 0; i < rows; i++)buffer[i] = arr[i];
+	delete[] arr[rows];
+	delete[] arr;
+	return buffer;
+}
+void push_col_back(int** arr, const int rows, int& cols)
+{
+	for (int i = 0; i < rows; i++)
+	{
+		//создаем буферную строку
+		int* buffer = new int[cols + 1] {};
+		//копируем значения из  исходной строки в буферную
+		for (int j = 0; j < cols; j++)buffer[j] = arr[i][j];
+		//удаляем исходную строку
+		delete[] arr[i];
+		//подменяем адрес строки в массиве указателей
+		arr[i] = buffer;	
+	}
+		cols++;
 }
