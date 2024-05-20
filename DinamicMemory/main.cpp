@@ -148,11 +148,12 @@ void FillRand(int** arr, const int rows, const int cols)
 {
 	for (int i = 0; i < rows; i++)
 	{
-		for (int j = 0; j < cols; j++)
+		FillRand(arr[i], cols);
+		/*for (int j = 0; j < cols; j++)
 		{
 			arr[i][j] = rand() % 10000;
 			arr[i][j] /= 100;
-		}
+		}*/
 
 	}
 }
@@ -171,11 +172,12 @@ template<typename T>void Print(T** arr, const int rows, const int cols)
 {
 	for (int i = 0; i < rows; i++)
 	{
-		for (int j = 0; j < cols; j++)
+		Print(arr[i], cols);
+		/*for (int j = 0; j < cols; j++)
 		{
 			cout << arr[i][j] << tab;
 		}
-		cout << endl;
+		cout << endl;*/
 	}
 	cout << endl;
 }
