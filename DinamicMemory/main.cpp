@@ -6,12 +6,13 @@ using std::endl;
 #define tab "\t"
 
 template<typename T>T** Allocate(const int rows, const int cols);
-void Clear(int** arr, const int rows);
+template<typename T>void Clear(T** arr, const int rows);
 
 void FillRand(int arr[], const int n,int minRand = 0, int maxRand = 100);
 void FillRand(double arr[], const int n,int minRand = 0, int maxRand = 100);
 void FillRand(char arr[], const int n);
 void FillRand(int** arr, const int rows, const int cols);
+void FillRand(double** arr, const int rows, const int cols);
 template<typename T>void Print(T arr[], const int n);
 template<typename T>void Print(T** arr, const int rows, const int cols);
 template<typename T>T* push_back(T arr[], int& n, T value);
@@ -55,7 +56,7 @@ void main()
 	delete[] arr;
 #endif // DYNAMIC_MEMORY_1
 #ifdef DYNAMIC_MEMORY_2
-	typedef int DataType;
+	typedef double DataType;
 	int rows;
 	int cols;
 	int index;
@@ -91,7 +92,7 @@ T** Allocate(const int rows, const int cols)
 	}
 	return arr;
 }
-void Clear(int** arr, const int rows)
+template<typename T>void Clear(T** arr, const int rows)
 {
 	//3)Сначала удаляем строки
 	for (int i = 0; i < rows; i++)
@@ -143,6 +144,17 @@ void FillRand(int** arr, const int rows, const int cols)
 		}
 
 	}
+}void FillRand(double** arr, const int rows, const int cols)
+{
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			arr[i][j] = rand() % 10000;
+			arr[i][j] /= 100;
+		}
+
+	}
 }
 template<typename T>
 void Print(T arr[], const int n)
@@ -167,8 +179,7 @@ template<typename T>void Print(T** arr, const int rows, const int cols)
 	}
 	cout << endl;
 }
-template<typename T>
-T* push_back(T arr[], int& n, T value)
+template<typename T>T* push_back(T arr[], int& n, T value)
 {
 	//1)Создаем буферный массив нужного размера
 	T* buffer = new T[n + 1];
@@ -212,44 +223,51 @@ T* pop_back(T arr[], int& n)
 template<typename T>
 T** push_row_back(T** arr,  int& rows, const int cols)
 {
-	//1) создаем буферный массив указателей нужного размера
-	T** buffer = new T* [rows+1];
+	return push_back(arr, rows, new T[cols]{});
+	////1) создаем буферный массив указателей нужного размера
+	//T** buffer = new T* [rows+1];
 
-	//Копируем строки из исходного массивав массив указателей
-	for (int i = 0; i < rows; i++)buffer[i] = arr[i];
-	//удаляем исходный массив указателей
-	delete[] arr;
-	//создаем строку и добавляем ее в массив
-	buffer[rows] = new T[cols] {};
-	//После добавления строки в массив колличество его строк увеличивается
-	rows++;
-	return buffer;
+	////Копируем строки из исходного массивав массив указателей
+	//for (int i = 0; i < rows; i++)buffer[i] = arr[i];
+	////удаляем исходный массив указателей
+	//delete[] arr;
+	////создаем строку и добавляем ее в массив
+	//buffer[rows] = new T[cols] {};
+	////После добавления строки в массив колличество его строк увеличивается
+	//rows++;
+	//return buffer;
 }
 template<typename T>
 T** pop_row_back(T** arr, int& rows, const int cols)
 {
 
-	T** buffer = new T* [--rows];
+	delete[] arr[rows-1];
+	return pop_back(arr,rows);
+	/*T** buffer = new T* [--rows];
 	for (int i = 0; i < rows; i++)buffer[i] = arr[i];
-	delete[] arr[rows];
-	delete[] arr;
-	return buffer;
+	return buffer;*/
 }
 template<typename T>
 void push_col_back(T** arr, const int rows, int& cols)
 {
-	for (int i = 0; i < rows; i++)
-	{
-		//создаем буферную строку
-		T* buffer = new T[cols + 1] {};
-		//копируем значения из  исходной строки в буферную
-		for (int j = 0; j < cols; j++)buffer[j] = arr[i][j];
-		//удаляем исходную строку
-		delete[] arr[i];
-		//подменяем адрес строки в массиве указателей
-		arr[i] = buffer;	
-	}
+	
+	
+		for (int i = 0; i < rows; i++)
+		{
+			arr[i] = push_back(arr[i], cols, T());
+			cols--;
+		}
 		cols++;
+	//	//создаем буферную строку
+	//	T* buffer = new T[cols + 1] {};
+	//	//копируем значения из  исходной строки в буферную
+	//	for (int j = 0; j < cols; j++)buffer[j] = arr[i][j];
+	//	//удаляем исходную строку
+	//	delete[] arr[i];
+	//	//подменяем адрес строки в массиве указателей
+	//	arr[i] = buffer;	
+	//}
+	//	cols++;
 }
 template<typename T> T** pop_row_front(T** arr, int& rows, const int cols)
 {
