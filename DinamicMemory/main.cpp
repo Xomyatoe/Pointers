@@ -5,37 +5,29 @@ using std::cout;
 using std::endl;
 #define tab "\t"
 
-int** Allocate(const int rows, const int cols);
+template<typename T>T** Allocate(const int rows, const int cols);
 void Clear(int** arr, const int rows);
 
 void FillRand(int arr[], const int n,int minRand = 0, int maxRand = 100);
 void FillRand(double arr[], const int n,int minRand = 0, int maxRand = 100);
 void FillRand(char arr[], const int n);
 void FillRand(int** arr, const int rows, const int cols);
-template<typename T>
-void Print(T arr[], const int n);
-template<typename T>
-void Print(T** arr, const int rows, const int cols);
-template<typename T>
-T* push_back(T arr[], int& n, T value);
-template<typename T>
-T* push_front(T arr[], int& n, T value);
-template<typename T>
-T* pop_back(T arr[], int& n);
-template<typename T>
-T** push_row_back(T** arr,  int& rows, const int cols);
-template<typename T>
-T** pop_row_back(T** arr, int& rows, const int cols);
-template<typename T>
-void push_col_back(T** arr,const int rows, int& cols);
+template<typename T>void Print(T arr[], const int n);
+template<typename T>void Print(T** arr, const int rows, const int cols);
+template<typename T>T* push_back(T arr[], int& n, T value);
+template<typename T>T* push_front(T arr[], int& n, T value);
+template<typename T>T* pop_back(T arr[], int& n);
+template<typename T>T** push_row_back(T** arr,  int& rows, const int cols);
+template<typename T>T** pop_row_back(T** arr, int& rows, const int cols);
+template<typename T>void push_col_back(T** arr,const int rows, int& cols);
 
 template<typename T> 
 T** pop_row_front(T** arr, int& rows, const int cols);
 template<typename T> 
 T** erase_row(T** arr, int& rows, const int cols, const int index);
 
-#define DYNAMIC_MEMORY_1
-//#define DYNAMIC_MEMORY_2
+//#define DYNAMIC_MEMORY_1
+#define DYNAMIC_MEMORY_2
 
 void main()
 {
@@ -44,7 +36,7 @@ void main()
 #ifdef DYNAMIC_MEMORY_1
 	int n;
 	cout << "Введите размер массива: "; cin >> n;
-	typedef char DataType;
+	typedef double DataType;
 	DataType* arr = new DataType[n];
 
 	FillRand(arr, n);
@@ -58,30 +50,23 @@ void main()
 	cout << "Введите добавляемое значение: "; cin >> value;
 	arr = push_front(arr, n, value);
 	Print(arr, n);
-
-	arr = pop_back(arr, n);
+    arr = pop_back(arr, n);
 	Print(arr, n);
 	delete[] arr;
-
 #endif // DYNAMIC_MEMORY_1
-
 #ifdef DYNAMIC_MEMORY_2
+	typedef int DataType;
 	int rows;
 	int cols;
 	int index;
 	cout << "Введите количество строк: "; cin >> rows;
-	cout << "Введите количество элементов строк: "; cin >> cols;
-
-	
-
-	int** arr = Allocate(rows, cols);
-
+	cout << "Введите количество элементов строк: "; cin >> cols;	
+	DataType** arr = Allocate<DataType>(rows, cols);
 	FillRand(arr, rows, cols);
 	Print(arr, rows, cols);
 	arr = push_row_back(arr, rows, cols);
 	FillRand(arr[rows - 1], cols, 100,1000);
 	Print(arr, rows, cols);
-
 	arr=pop_row_back(arr, rows, cols);
 	Print(arr, rows, cols);
 	push_col_back(arr,rows,cols);
@@ -91,20 +76,18 @@ void main()
 	cout << "Введите индекс аннигилирования строки "; cin >> index;
 	arr = erase_row(arr, rows, cols, index);
 	Print(arr, rows, cols);
-
 	Clear(arr, rows);
 #endif
-
 }
-
-int** Allocate(const int rows, const int cols)
+template<typename T>
+T** Allocate(const int rows, const int cols)
 {
 	//1) создаем массив указателей
-	int** arr = new int* [rows];
+	T** arr = new T* [rows];
 	//2) выделяем память под строки
 	for (int i = 0; i < rows; i++)
 	{
-		arr[i] = new int[cols] {};
+		arr[i] = new T[cols] {};
 	}
 	return arr;
 }
@@ -172,8 +155,7 @@ void Print(T arr[], const int n)
 	}
 	cout << endl;
 }
-template<typename T>
-void Print(T** arr, const int rows, const int cols)
+template<typename T>void Print(T** arr, const int rows, const int cols)
 {
 	for (int i = 0; i < rows; i++)
 	{
@@ -238,7 +220,7 @@ T** push_row_back(T** arr,  int& rows, const int cols)
 	//удаляем исходный массив указателей
 	delete[] arr;
 	//создаем строку и добавляем ее в массив
-	buffer[rows] = new int[cols] {};
+	buffer[rows] = new T[cols] {};
 	//После добавления строки в массив колличество его строк увеличивается
 	rows++;
 	return buffer;
